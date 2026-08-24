@@ -22,6 +22,9 @@
 - [数据 Schema](docs/DATA_SCHEMA.md)
 - [技术架构](docs/ARCHITECTURE.md)
 - [开发路线图](docs/ROADMAP.md)
+- [本地演示指南](docs/DEMO.md)
+- [维护记录与发布节奏](MAINTENANCE.md)
+- [OSS 申请材料草稿](docs/OSS_APPLICATION.md)
 
 ## 快速开始
 
@@ -42,6 +45,8 @@ jobpulse dashboard data/sample_jobs.csv -o reports/jobpulse-dashboard.html
 ```
 
 仪表盘是单文件输出，不依赖外部 CDN、在线账号或额外运行服务。
+
+完整的样例演示、预期结果和反馈清单见 [本地演示指南](docs/DEMO.md)。
 
 为了保留来源信息，可在命令后增加 `--source-name`、`--source-license` 和 `--access-mode user_export`。
 
@@ -113,3 +118,4 @@ tests/      标准库 unittest 测试
 ## 许可证
 
 本项目使用 [MIT License](LICENSE)。
+

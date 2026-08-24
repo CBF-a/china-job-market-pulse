@@ -14,6 +14,7 @@
 - 增加零外部依赖的本地 HTML 仪表盘和 `jobpulse dashboard` 命令。
 - 增加本地文件来源适配器、许可/访问方式元数据和质量阈值监控。
 - 增加 Ruff、Mypy、GitHub Actions 三层质量检查和包构建流程。
+- 增加可复现本地演示、维护记录和 OSS 申请材料草稿。
 
 ## [0.1.0] - 2026-08-24
 
@@ -24,3 +25,4 @@
 - 增加产品需求、数据 Schema、技术架构和路线图文档。
 
 [Unreleased]: https://github.com/CBF-a/china-job-market-pulse/compare/main...HEAD
+
