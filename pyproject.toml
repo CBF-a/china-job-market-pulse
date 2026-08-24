@@ -1,0 +1,20 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "china-job-market-pulse"
+version = "0.1.0"
+description = "Analyze China job-market data: salary, skills, cities, and career trends."
+readme = "README.md"
+requires-python = ">=3.10"
+license = { file = "LICENSE" }
+authors = [{ name = "CBF-a" }]
+dependencies = []
+
+[project.scripts]
+jobpulse = "china_job_market_pulse.cli:main"
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
