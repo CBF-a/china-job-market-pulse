@@ -14,6 +14,10 @@
 | 演示入口 | `docs/DEMO.md`，使用 `data/sample_jobs.csv` |
 | 质量证据 | 17 个测试、Ruff、Mypy、GitHub Actions、可构建 sdist/wheel |
 
+## Codex / OpenAI 使用情况
+
+当前项目在开发阶段使用 Codex 辅助完成产品规划、模块拆分、Python 实现、测试、质量门禁和文档整理。这个事实可以由维护者根据实际开发记录说明，但不应夸大为自动生成或无人维护。项目的运行时核心保持离线，不要求使用者提供 OpenAI API key，也不会把职位数据上传到 OpenAI。若未来增加可选的 OpenAI API 能力，将单独设计开关、数据边界和成本说明。
+
 ## 项目简介
 
 China Job Market Pulse 是一个面向中国就业市场的离线开源分析工具。它把用户有权处理的职位 CSV/JSON 转换为可复现的薪资、技能、城市、经验、学历、岗位类别和按月趋势报告，并同时输出质量摘要、来源元数据和单文件 HTML 仪表盘。
@@ -50,6 +54,7 @@ China Job Market Pulse 是一个面向中国就业市场的离线开源分析工
 - 可公开访问的演示链接、截图或演示视频；
 - 所有输入数据的来源、许可证和再分发依据；
 - 计划如何使用 OpenAI 产品或 API，以及相关成本预算；
+- 当前使用 Codex 的具体开发场景，以及未来是否需要 API 能力；
 - 需要申请的支持类型和预期使用周期；
 - 是否存在商业关联、赞助、冲突或其他需要披露的事项。
 
@@ -60,7 +65,7 @@ China Job Market Pulse is an MIT-licensed, offline-first Python toolkit for repr
 
 The project addresses a practical reproducibility gap: job-market analyses often start from heterogeneous exports but do not document schemas, rejected rows, duplicate handling, or source permissions. China Job Market Pulse makes those boundaries explicit and keeps the core workflow local, dependency-light, and easy to audit.
 
-The public repository includes an MIT license, documentation, synthetic sample data, 17 automated tests, Ruff and Mypy checks, GitHub Actions, release notes, and a reproducible demo. We are seeking support to improve the project’s documentation and maintainability, validate the workflow with real users, and help open-source contributors build trustworthy analyses without exposing private or unauthorized data.
+The public repository includes an MIT license, documentation, synthetic sample data, 17 automated tests, Ruff and Mypy checks, GitHub Actions, release notes, and a reproducible demo. We used Codex during planning, implementation, testing, and documentation, while keeping the runtime analysis workflow offline and free of required API keys. We are seeking support to improve the project’s documentation and maintainability, validate the workflow with real users, and help open-source contributors build trustworthy analyses without exposing private or unauthorized data.
 ```
 
 ## 提交前核对
