@@ -33,6 +33,8 @@ python -m pip install -e .
 jobpulse analyze data/sample_jobs.csv -o reports/sample-report.md --json-output reports/sample-report.json
 ```
 
+需要表格化输出时增加 `--csv-output reports/sample-report.csv`。输入存在坏行时，默认严格退出；使用 `--allow-errors` 可以分析有效行并把错误保留在 JSON 质量报告中。
+
 激活虚拟环境：
 
 ```text

@@ -4,7 +4,7 @@ __pycache__/
 .pytest_cache/
 reports/*.json
 reports/*.md
+reports/*.csv
 dist/
 build/
 *.egg-info/
-
