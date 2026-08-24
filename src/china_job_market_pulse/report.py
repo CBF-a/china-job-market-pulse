@@ -4,7 +4,7 @@ import csv
 import json
 from io import StringIO
 
-from .models import DataQualityReport, SCHEMA_VERSION
+from .models import SCHEMA_VERSION, DataQualityReport
 
 
 def build_report(

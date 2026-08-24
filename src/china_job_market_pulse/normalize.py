@@ -5,7 +5,6 @@ from datetime import date, datetime
 from math import isfinite
 from typing import Any
 
-
 _WHITESPACE_RE = re.compile(r"\s+")
 
 CITY_ALIASES = {

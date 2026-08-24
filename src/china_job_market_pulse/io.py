@@ -6,7 +6,7 @@ from collections.abc import Mapping
 from pathlib import Path
 
 from .dedupe import deduplicate_jobs
-from .models import DataQualityReport, JobDataset, JobPosting
+from .models import DataIssue, DataQualityReport, JobDataset, JobPosting
 from .normalize import (
     clean_text,
     normalize_city,
@@ -89,7 +89,7 @@ def load_job_dataset(
         missing_text = ", ".join(sorted(missing))
         raise ValueError(f"Input is missing required columns: {missing_text}")
 
-    issues = []
+    issues: list[DataIssue] = []
     valid_jobs: list[JobPosting] = []
     for offset, row in enumerate(rows):
         row_number = first_row_number + offset

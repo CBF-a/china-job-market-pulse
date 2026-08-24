@@ -5,9 +5,8 @@ from dataclasses import dataclass
 from typing import Literal
 from urllib.parse import urlparse
 
-from .models import DataIssue
+from .models import DataIssue, DataQualityReport
 from .normalize import clean_text, normalize_date, parse_optional_number, split_skills
-
 
 REQUIRED_COLUMNS = frozenset({"title", "city", "skills"})
 
@@ -51,9 +50,9 @@ def validate_row(row: Mapping[str, object], row_number: int) -> tuple[DataIssue,
     salary_min = numeric_values["salary_min"]
     salary_max = numeric_values["salary_max"]
     for field in ("salary_min", "salary_max", "experience_years_min"):
-        value = numeric_values[field]
-        if value is not None and value < 0:
-            issues.append(_issue("error", row_number, field, "NEGATIVE_NUMBER", f"{field} cannot be negative", str(value)))
+        number_value = numeric_values[field]
+        if number_value is not None and number_value < 0:
+            issues.append(_issue("error", row_number, field, "NEGATIVE_NUMBER", f"{field} cannot be negative", str(number_value)))
 
     if salary_min is not None and salary_max is not None and salary_min > salary_max:
         issues.append(
@@ -127,7 +126,7 @@ class QualityAlert:
         }
 
 
-def monitor_quality(report, thresholds: QualityThresholds | None = None) -> tuple[QualityAlert, ...]:
+def monitor_quality(report: DataQualityReport, thresholds: QualityThresholds | None = None) -> tuple[QualityAlert, ...]:
     """Return deterministic alerts for a completed import quality report."""
 
     policy = thresholds or QualityThresholds()

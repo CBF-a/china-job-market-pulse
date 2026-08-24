@@ -82,6 +82,15 @@ python -m compileall -q src tests
 git diff --check
 ```
 
+完整开发门禁：
+
+```bash
+python -m pip install -e ".[dev]"
+ruff check src tests
+mypy src
+python -m build
+```
+
 Pull request 会由 GitHub Actions 在 Python 3.10、3.11 和 3.12 上运行测试与编译检查。
 
 ## 项目结构
@@ -99,6 +108,7 @@ tests/      标准库 unittest 测试
 请先阅读 [CONTRIBUTING.md](CONTRIBUTING.md)。提交数据适配器、分析指标或文档时，请同时补充测试和来源说明。不要提交 API key、Cookie、个人联系方式、私人原始数据或其他凭证。
 
 行为准则见 [CODE_OF_CONDUCT.md](CODE_OF_CONDUCT.md)，安全问题见 [SECURITY.md](SECURITY.md)，版本变化见 [CHANGELOG.md](CHANGELOG.md)。
+发布步骤见 [RELEASING.md](RELEASING.md)。
 
 ## 许可证
 

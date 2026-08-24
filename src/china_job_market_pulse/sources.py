@@ -7,7 +7,6 @@ from typing import Literal, Protocol
 from .io import load_job_dataset
 from .models import JobDataset
 
-
 AccessMode = Literal["synthetic", "user_export", "public_dataset", "authorized_api"]
 
 

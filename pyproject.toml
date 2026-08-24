@@ -4,13 +4,21 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "china-job-market-pulse"
-version = "0.1.0"
+version = "0.2.0"
 description = "Analyze China job-market data: salary, skills, cities, and career trends."
 readme = "README.md"
 requires-python = ">=3.10"
-license = { file = "LICENSE" }
+license = "MIT"
+license-files = ["LICENSE"]
 authors = [{ name = "CBF-a" }]
 dependencies = []
+
+[project.optional-dependencies]
+dev = [
+    "build>=1.2.2",
+    "mypy>=1.11",
+    "ruff>=0.6.9",
+]
 
 [project.scripts]
 jobpulse = "china_job_market_pulse.cli:main"
@@ -18,3 +26,16 @@ jobpulse = "china_job_market_pulse.cli:main"
 [tool.setuptools.packages.find]
 where = ["src"]
 
+[tool.ruff]
+target-version = "py310"
+line-length = 120
+
+[tool.ruff.lint]
+select = ["E4", "E7", "E9", "F", "I", "UP"]
+
+[tool.mypy]
+python_version = "3.10"
+files = ["src"]
+check_untyped_defs = true
+disallow_untyped_defs = true
+ignore_missing_imports = true

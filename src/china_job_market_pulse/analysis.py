@@ -1,11 +1,10 @@
 from __future__ import annotations
 
 from collections import Counter, defaultdict
+from collections.abc import Iterable
 from statistics import mean, median
-from typing import Iterable
 
-from .models import JobPosting, SCHEMA_VERSION
-
+from .models import SCHEMA_VERSION, JobPosting
 
 ROLE_KEYWORDS: tuple[tuple[str, tuple[str, ...]], ...] = (
     (
@@ -45,7 +44,7 @@ def _salary_summary(jobs: list[JobPosting]) -> dict[str, float | int | None]:
     }
 
 
-def _ranked_counts(counter: Counter[str], labels: dict[str, str], total: int) -> list[dict[str, str | int | float]]:
+def _ranked_counts(counter: Counter[str], labels: dict[str, str], total: int) -> list[dict[str, str | int | float | None]]:
     ranked = sorted(counter.items(), key=lambda item: (-item[1], labels.get(item[0], item[0]).casefold()))
     return [
         {
@@ -67,7 +66,7 @@ def _normalized_counter(values: Iterable[str]) -> tuple[Counter[str], dict[str, 
     return counter, labels
 
 
-def _grouped_counts(values: Iterable[str], total: int, order: tuple[str, ...] | None = None) -> list[dict[str, str | int | float]]:
+def _grouped_counts(values: Iterable[str], total: int, order: tuple[str, ...] | None = None) -> list[dict[str, str | int | float | None]]:
     counter, labels = _normalized_counter(values)
     result = _ranked_counts(counter, labels, total)
     if order is None:
