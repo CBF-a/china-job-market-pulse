@@ -48,6 +48,10 @@ jobpulse dashboard data/sample_jobs.csv -o reports/jobpulse-dashboard.html
 
 完整的样例演示、预期结果和反馈清单见 [本地演示指南](docs/DEMO.md)。
 
+## Codex / OpenAI 使用说明
+
+本项目的产品规划、模块拆分、代码实现、测试补充和文档迭代使用了 Codex 辅助完成。项目的核心运行时保持离线，不要求用户配置 OpenAI API key，也不会把职位数据上传到 OpenAI 或其他在线服务。仓库中不包含任何凭证；后续如增加可选的 OpenAI 能力，也会与本地分析核心保持边界并单独记录数据处理方式。
+
 为了保留来源信息，可在命令后增加 `--source-name`、`--source-license` 和 `--access-mode user_export`。
 
 激活虚拟环境：
