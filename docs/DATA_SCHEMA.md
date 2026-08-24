@@ -41,20 +41,20 @@
 
 | 字段 | 类型 | 说明 |
 | --- | --- | --- |
-| `record_id` | string | 稳定的记录标识 |
+| `title` | string | 清理空白后的职位名称 |
 | `title_raw` | string | 职位名称原文 |
-| `title_normalized` | string | 清理空白和常见格式后的职位名称 |
+| `company` | string | 清理空白后的公司名称 |
 | `company_raw` | string/null | 公司名称原文 |
+| `city` | string | 城市标准化名称 |
 | `city_raw` | string | 城市原文 |
-| `city_normalized` | string | 城市标准化名称 |
-| `salary_min_cny_monthly` | number/null | 人民币元/月下限 |
-| `salary_max_cny_monthly` | number/null | 人民币元/月上限 |
+| `salary_min` | number/null | 人民币元/月下限 |
+| `salary_max` | number/null | 人民币元/月上限 |
 | `salary_period` | enum/null | `monthly`、`annual`、`daily`、`unknown` |
 | `experience_years_min` | number/null | 最低经验年数 |
-| `experience_years_max` | number/null | 最高经验年数；未知时为空 |
-| `education_normalized` | enum/null | 标准学历等级；保留原文字段 |
+| `education` | string | 学历要求原文 |
+| `education_normalized` | enum/null | 标准学历等级 |
+| `skills` | array[string] | 去空白、去重后的技能列表 |
 | `skills_raw` | string | 技能原文 |
-| `skills_normalized` | array[string] | 去空白、统一大小写后的技能列表 |
 | `posted_date` | date/null | 发布时间 |
 | `source_url` | string/null | 来源 URL |
 | `source_name` | string/null | 数据源名称 |
