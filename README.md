@@ -35,6 +35,14 @@ jobpulse analyze data/sample_jobs.csv -o reports/sample-report.md --json-output 
 
 需要表格化输出时增加 `--csv-output reports/sample-report.csv`。输入存在坏行时，默认严格退出；使用 `--allow-errors` 可以分析有效行并把错误保留在 JSON 质量报告中。
 
+生成本地交互式仪表盘：
+
+```bash
+jobpulse dashboard data/sample_jobs.csv -o reports/jobpulse-dashboard.html
+```
+
+仪表盘是单文件输出，不依赖外部 CDN、在线账号或额外运行服务。
+
 激活虚拟环境：
 
 ```text

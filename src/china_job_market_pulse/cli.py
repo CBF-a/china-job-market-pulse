@@ -5,8 +5,22 @@ import sys
 from pathlib import Path
 
 from .analysis import analyze_jobs
+from .dashboard import to_dashboard_html
 from .io import load_job_dataset
 from .report import build_report, to_csv, to_json, to_markdown
+
+
+def _add_quality_options(parser: argparse.ArgumentParser) -> None:
+    parser.add_argument(
+        "--allow-errors",
+        action="store_true",
+        help="analyze valid rows while retaining validation errors in the quality report",
+    )
+    parser.add_argument(
+        "--no-dedupe",
+        action="store_true",
+        help="keep duplicate rows instead of applying the default deterministic dedupe",
+    )
 
 
 def build_parser() -> argparse.ArgumentParser:
@@ -18,16 +32,12 @@ def build_parser() -> argparse.ArgumentParser:
     analyze.add_argument("--output", "-o", type=Path, help="Markdown output path")
     analyze.add_argument("--json-output", type=Path, help="optional JSON output path")
     analyze.add_argument("--csv-output", type=Path, help="optional long-form CSV output path")
-    analyze.add_argument(
-        "--allow-errors",
-        action="store_true",
-        help="analyze valid rows while retaining validation errors in the quality report",
-    )
-    analyze.add_argument(
-        "--no-dedupe",
-        action="store_true",
-        help="keep duplicate rows instead of applying the default deterministic dedupe",
-    )
+    _add_quality_options(analyze)
+
+    dashboard = subparsers.add_parser("dashboard", help="generate a self-contained local HTML dashboard")
+    dashboard.add_argument("input_path", type=Path, help="input job-posting CSV or JSON")
+    dashboard.add_argument("--output", "-o", type=Path, help="HTML output path")
+    _add_quality_options(dashboard)
     return parser
 
 
@@ -38,18 +48,14 @@ def _write_text(path: Path | None, content: str) -> None:
     path.write_text(content, encoding="utf-8", newline="\n")
 
 
-def main(argv: list[str] | None = None) -> int:
-    args = build_parser().parse_args(argv)
-    if args.command != "analyze":
-        return 2
-
+def _load_report(input_path: Path, allow_errors: bool, deduplicate: bool) -> dict | None:
     try:
-        dataset = load_job_dataset(args.input_path, deduplicate=not args.no_dedupe)
+        dataset = load_job_dataset(input_path, deduplicate=deduplicate)
     except (OSError, ValueError) as exc:
         print(f"Input error: {exc}", file=sys.stderr)
-        return 2
+        return None
 
-    if dataset.quality.error_count and not args.allow_errors:
+    if dataset.quality.error_count and not allow_errors:
         first_error = next(issue for issue in dataset.quality.issues if issue.severity == "error")
         print(
             f"Data quality check failed: {dataset.quality.error_count} error(s); "
@@ -57,20 +63,40 @@ def main(argv: list[str] | None = None) -> int:
             "Use --allow-errors to analyze valid rows.",
             file=sys.stderr,
         )
-        return 2
+        return None
     if not dataset.jobs:
         print("Data quality check produced no analyzable rows.", file=sys.stderr)
-        return 2
+        return None
 
     analysis = analyze_jobs(dataset.jobs)
-    report = build_report(analysis, dataset.quality, args.input_path.name)
-    markdown = to_markdown(report)
-    _write_text(args.output, markdown)
-    _write_text(args.json_output, to_json(report))
-    _write_text(args.csv_output, to_csv(report))
-    if args.output is None:
-        print(markdown)
-    return 0
+    return build_report(analysis, dataset.quality, input_path.name)
+
+
+def main(argv: list[str] | None = None) -> int:
+    args = build_parser().parse_args(argv)
+    if args.command == "analyze":
+        report = _load_report(args.input_path, args.allow_errors, not args.no_dedupe)
+        if report is None:
+            return 2
+        markdown = to_markdown(report)
+        _write_text(args.output, markdown)
+        _write_text(args.json_output, to_json(report))
+        _write_text(args.csv_output, to_csv(report))
+        if args.output is None:
+            print(markdown)
+        return 0
+
+    if args.command == "dashboard":
+        report = _load_report(args.input_path, args.allow_errors, not args.no_dedupe)
+        if report is None:
+            return 2
+        dashboard = to_dashboard_html(report)
+        _write_text(args.output, dashboard)
+        if args.output is None:
+            print(dashboard)
+        return 0
+
+    return 2
 
 
 if __name__ == "__main__":

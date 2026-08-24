@@ -40,6 +40,17 @@ class CliTests(unittest.TestCase):
             self.assertEqual(rows[0]["section"], "overall")
             self.assertTrue(any(row["section"] == "trends" for row in rows))
 
+    def test_dashboard_command_writes_self_contained_html(self) -> None:
+        sample = Path(__file__).parents[1] / "data" / "sample_jobs.csv"
+        with tempfile.TemporaryDirectory() as directory:
+            output_path = Path(directory) / "dashboard.html"
+            exit_code = main(["dashboard", str(sample), "--output", str(output_path)])
+            self.assertEqual(exit_code, 0)
+            html = output_path.read_text(encoding="utf-8")
+            self.assertIn("window.__JOBPULSE_REPORT__", html)
+            self.assertIn("id=\"city-filter\"", html)
+            self.assertIn("China Job Market Pulse", html)
+
     def test_cli_strict_mode_rejects_invalid_rows_and_allow_errors_keeps_valid_rows(self) -> None:
         with tempfile.TemporaryDirectory() as directory:
             root = Path(directory)

@@ -17,7 +17,7 @@ analysis（统计分析）
       ↓
 report（Markdown/JSON/CSV）
       ↓
-dashboard（后续的本地可视化）
+dashboard（本地可视化）
 ```
 
 每一层都应有明确输入和输出，避免把网络访问、文本清洗、统计计算和展示逻辑混在一起。
@@ -33,18 +33,18 @@ dashboard（后续的本地可视化）
 - `dedupe`：基于规范化字段的确定性指纹和重复记录诊断。
 - `analysis`：薪资、城市、技能和基础分组统计。
 - `report`：Markdown 和 JSON 序列化。
+- `dashboard`：单文件 HTML/CSS/JavaScript 仪表盘生成，不依赖外部资源。
 - `cli`：命令行参数、错误展示和退出码。
 
 计划新增或细化：
 
 - `sources`：数据源适配器。适配器只负责获得或转换数据，不直接参与分析。
-- `dashboard`：本地仪表盘的页面和查询层，不把图表代码放入核心模型。
 
 ## 3. 技术选择
 
 - Python `>=3.10`，保持核心运行路径简单、可测试。
 - 现阶段核心依赖优先使用 Python 标准库，减少安装和离线运行障碍。
-- 可视化阶段计划使用 Streamlit 与 Plotly；它们应作为可选依赖，不影响 CLI 核心。
+- 当前可视化使用单文件 HTML/CSS/JavaScript，保证离线演示和低部署成本；后续如需复杂交互，再评估 Streamlit 与 Plotly 可选依赖。
 - 当需要持久化多次导入的数据集时，优先考虑 SQLite，而不是立即引入远程数据库。
 - GitHub Actions 用于测试、类型检查、构建和发布前校验。
 - 文本输出和 schema 变更需要在变更日志中记录。
