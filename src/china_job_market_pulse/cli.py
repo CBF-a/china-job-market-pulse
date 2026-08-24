@@ -21,6 +21,13 @@ def _add_quality_options(parser: argparse.ArgumentParser) -> None:
         action="store_true",
         help="keep duplicate rows instead of applying the default deterministic dedupe",
     )
+    parser.add_argument("--source-name", help="human-readable source name for provenance")
+    parser.add_argument("--source-license", help="data license or permission note")
+    parser.add_argument(
+        "--access-mode",
+        choices=("synthetic", "user_export", "public_dataset", "authorized_api"),
+        help="declared access mode for the input source",
+    )
 
 
 def build_parser() -> argparse.ArgumentParser:
@@ -48,9 +55,22 @@ def _write_text(path: Path | None, content: str) -> None:
     path.write_text(content, encoding="utf-8", newline="\n")
 
 
-def _load_report(input_path: Path, allow_errors: bool, deduplicate: bool) -> dict | None:
+def _load_report(
+    input_path: Path,
+    allow_errors: bool,
+    deduplicate: bool,
+    source_name: str | None,
+    source_license: str | None,
+    access_mode: str | None,
+) -> dict | None:
     try:
-        dataset = load_job_dataset(input_path, deduplicate=deduplicate)
+        dataset = load_job_dataset(
+            input_path,
+            deduplicate=deduplicate,
+            source_name=source_name,
+            source_license=source_license,
+            access_mode=access_mode,
+        )
     except (OSError, ValueError) as exc:
         print(f"Input error: {exc}", file=sys.stderr)
         return None
@@ -69,13 +89,26 @@ def _load_report(input_path: Path, allow_errors: bool, deduplicate: bool) -> dic
         return None
 
     analysis = analyze_jobs(dataset.jobs)
-    return build_report(analysis, dataset.quality, input_path.name)
+    return build_report(
+        analysis,
+        dataset.quality,
+        source_name or input_path.name,
+        source_license=source_license,
+        access_mode=access_mode,
+    )
 
 
 def main(argv: list[str] | None = None) -> int:
     args = build_parser().parse_args(argv)
     if args.command == "analyze":
-        report = _load_report(args.input_path, args.allow_errors, not args.no_dedupe)
+        report = _load_report(
+            args.input_path,
+            args.allow_errors,
+            not args.no_dedupe,
+            args.source_name,
+            args.source_license,
+            args.access_mode,
+        )
         if report is None:
             return 2
         markdown = to_markdown(report)
@@ -87,7 +120,14 @@ def main(argv: list[str] | None = None) -> int:
         return 0
 
     if args.command == "dashboard":
-        report = _load_report(args.input_path, args.allow_errors, not args.no_dedupe)
+        report = _load_report(
+            args.input_path,
+            args.allow_errors,
+            not args.no_dedupe,
+            args.source_name,
+            args.source_license,
+            args.access_mode,
+        )
         if report is None:
             return 2
         dashboard = to_dashboard_html(report)

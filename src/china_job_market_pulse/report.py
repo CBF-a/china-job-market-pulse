@@ -7,7 +7,14 @@ from io import StringIO
 from .models import DataQualityReport, SCHEMA_VERSION
 
 
-def build_report(analysis: dict, quality: DataQualityReport, source_name: str) -> dict:
+def build_report(
+    analysis: dict,
+    quality: DataQualityReport,
+    source_name: str,
+    *,
+    source_license: str | None = None,
+    access_mode: str | None = None,
+) -> dict:
     """Wrap analysis with stable schema, provenance, and quality metadata."""
 
     return {
@@ -16,6 +23,8 @@ def build_report(analysis: dict, quality: DataQualityReport, source_name: str) -
         "metadata": {
             "source_name": source_name,
             "job_count": analysis.get("overall", {}).get("total_jobs", 0),
+            "source_license": source_license,
+            "access_mode": access_mode,
         },
         "quality": quality.to_dict(),
         "analysis": analysis,

@@ -63,7 +63,8 @@
 | `record_id` | string/null | 规范化记录的 SHA-256 稳定标识 |
 
 导入结果还包含 `JobDataset` 元数据：`schema_version`、`source_path` 和
-`DataQualityReport`。质量报告记录总行数、接收行数、拒绝行数、重复行数、错误数、警告数以及逐行问题。
+`DataQualityReport`。数据集还可以记录 `source_name`、`source_license` 和
+`access_mode`。质量报告记录总行数、接收行数、拒绝行数、重复行数、错误数、警告数以及逐行问题。
 
 当前支持 CSV 和 JSON 输入。JSON 可以是职位对象数组，也可以是包含 `jobs` 数组的对象。
 
@@ -111,3 +112,4 @@ Python后端工程师,北京,"Python, FastAPI, PostgreSQL",示例科技,18000,30
 - 不允许提交密码、Cookie、令牌、API key、个人联系方式或其他凭证。
 - 原始文件的来源、许可、采集时间和处理版本应写入报告或伴随元数据。
 - 对外发布前应检查仓库历史、日志和示例文件中是否包含敏感信息。
+- 数据源适配器必须声明 `synthetic`、`user_export`、`public_dataset` 或 `authorized_api` 之一作为访问方式。

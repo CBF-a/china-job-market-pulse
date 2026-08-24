@@ -43,6 +43,8 @@ jobpulse dashboard data/sample_jobs.csv -o reports/jobpulse-dashboard.html
 
 仪表盘是单文件输出，不依赖外部 CDN、在线账号或额外运行服务。
 
+为了保留来源信息，可在命令后增加 `--source-name`、`--source-license` 和 `--access-mode user_export`。
+
 激活虚拟环境：
 
 ```text

@@ -100,3 +100,6 @@ class JobDataset:
     quality: DataQualityReport
     source_path: str
     schema_version: str = SCHEMA_VERSION
+    source_name: str | None = None
+    source_license: str | None = None
+    access_mode: str | None = None

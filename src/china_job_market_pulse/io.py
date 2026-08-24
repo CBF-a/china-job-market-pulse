@@ -39,7 +39,7 @@ def _read_rows(path: Path) -> tuple[list[dict[str, object]], set[str], int]:
     return rows, columns, 2
 
 
-def _job_from_row(row: Mapping[str, object], row_number: int) -> JobPosting:
+def _job_from_row(row: Mapping[str, object], row_number: int, source_name: str | None = None) -> JobPosting:
     title_raw = clean_text(row.get("title"))
     company_raw = normalize_company(row.get("company"))
     city_raw = clean_text(row.get("city"))
@@ -67,12 +67,19 @@ def _job_from_row(row: Mapping[str, object], row_number: int) -> JobPosting:
         if row.get("salary_min") not in (None, "") or row.get("salary_max") not in (None, "")
         else None,
         row_number=row_number,
-        source_name=clean_text(row.get("source_name")) or None,
+        source_name=clean_text(row.get("source_name")) or source_name,
         collected_at=clean_text(row.get("collected_at")) or None,
     )
 
 
-def load_job_dataset(path: str | Path, *, deduplicate: bool = True) -> JobDataset:
+def load_job_dataset(
+    path: str | Path,
+    *,
+    deduplicate: bool = True,
+    source_name: str | None = None,
+    source_license: str | None = None,
+    access_mode: str | None = None,
+) -> JobDataset:
     """Load, validate, normalize, and optionally deduplicate CSV or JSON input."""
 
     source_path = Path(path)
@@ -89,7 +96,7 @@ def load_job_dataset(path: str | Path, *, deduplicate: bool = True) -> JobDatase
         row_issues = validate_row(row, row_number)
         issues.extend(row_issues)
         if not has_errors(row_issues):
-            valid_jobs.append(_job_from_row(row, row_number))
+            valid_jobs.append(_job_from_row(row, row_number, source_name))
 
     duplicate_count = 0
     if deduplicate:
@@ -103,7 +110,14 @@ def load_job_dataset(path: str | Path, *, deduplicate: bool = True) -> JobDatase
         duplicate_rows=duplicate_count,
         issues=tuple(issues),
     )
-    return JobDataset(tuple(valid_jobs), quality, str(source_path))
+    return JobDataset(
+        tuple(valid_jobs),
+        quality,
+        str(source_path),
+        source_name=source_name,
+        source_license=source_license,
+        access_mode=access_mode,
+    )
 
 
 def load_jobs(path: str | Path) -> list[JobPosting]:
